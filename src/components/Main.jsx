@@ -1,14 +1,50 @@
+import { useState } from "react";
+import ClaudeRecipe from "./ClaudeRecipe";
+import IngredientsList from "./IngredientsList";
+import { getRecipeFromChefClaude, getRecipeFromMistral } from "../ai";
+
 export default function Main() {
+  const [ingredients, setIngredients] = useState([
+    "tomato",
+    "onion",
+    "garlic",
+    "oregano",
+    "chicken",
+  ]);
+  const [recipe, setRecipe] = useState("");
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    console.log("Form submitted");
+    const formData = new FormData(event.currentTarget);
+    const ingredient = formData.get("ingredient");
+    console.log("Ingredient:", ingredient);
+    setIngredients((prevIngredients) => [...prevIngredients, ingredient]);
+    event.currentTarget.reset();
+  }
+  async function getRecipeFromAI() {
+    const recipeResponse = await getRecipeFromMistral(ingredients);
+    setRecipe(recipeResponse);
+  }
   return (
     <main>
-      <form className="add-ingredient-form">
+      <form className="add-ingredient-form" onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="e.g. oregano"
           aria-label="add ingredient"
+          name="ingredient"
         />
         <button type="submit">Add Ingredient</button>
       </form>
+      {ingredients.length > 0 && (
+        <IngredientsList
+          ingredients={ingredients}
+          getRecipeFromAI={getRecipeFromAI}
+        />
+      )}
+
+      {recipe && <ClaudeRecipe recipeText={recipe} />}
     </main>
   );
 }
