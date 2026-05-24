@@ -1,4 +1,4 @@
-export default function IngredientsList({ ingredients, getRecipeFromAI }) {
+export default function IngredientsList({ ingredients, getRecipeFromAI, refRecipeSection }) {
   const listItems = ingredients.map((ingredient) => (
     <li key={ingredient}>{ingredient}</li>
   ));
@@ -7,7 +7,7 @@ export default function IngredientsList({ ingredients, getRecipeFromAI }) {
       <h2>Ingredients on Hand:</h2>
       <ul className="ingredient-list">{listItems}</ul>
       {ingredients.length > 3 && (
-        <div className="get-recipe-container">
+        <div ref={refRecipeSection} className="get-recipe-container">
           <div>
             <h3>Ready for recipe?</h3>
             <p>Generate a recipe from your ingredients</p>

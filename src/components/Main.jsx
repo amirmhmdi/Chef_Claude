@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import ClaudeRecipe from "./ClaudeRecipe";
 import IngredientsList from "./IngredientsList";
 import { getRecipeFromChefClaude, getRecipeFromMistral } from "../ai";
@@ -12,6 +12,13 @@ export default function Main() {
     "chicken",
   ]);
   const [recipe, setRecipe] = useState("");
+  const recipeSection = useRef(null);
+
+  useEffect(() => {
+    if (recipeSection.current !== null && recipe !== "") {
+      recipeSection.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [recipe]);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -41,6 +48,7 @@ export default function Main() {
         <IngredientsList
           ingredients={ingredients}
           getRecipeFromAI={getRecipeFromAI}
+          refRecipeSection={recipeSection}
         />
       )}
 
